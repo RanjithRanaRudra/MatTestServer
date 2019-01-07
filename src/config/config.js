@@ -1,0 +1,20 @@
+var env = process.env.NODE_ENV || 'development';
+console.log('env ******', env);
+switch(env) {
+    case 'development' :
+        process.env.PORT = 3000;
+        process.env.MONGODB_URI = 'mongodb://localhost:27017/MatTest';
+        break;
+    case 'test' :
+        process.env.PORT = 3001;
+        process.env.MONGODB_URI = 'mongodb://localhost:27017/MatTestPsuedo';
+        break;
+}
+
+var PORT = process.env.PORT;
+var MONGODB_URI = process.env.MONGODB_URI;
+
+module.exports = {
+    PORT,
+    MONGODB_URI
+}
