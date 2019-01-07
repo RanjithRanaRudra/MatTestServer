@@ -12,9 +12,10 @@ const app = express();
 app.use(
     body_parser.json(),
     (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        next();
   });
 
 app.get('/', (req, res)=> {
@@ -47,17 +48,19 @@ app.get('/getOwners', (req, res)=> {
 
 // delete a record
 app.delete('/deleteOwner/:id', (req, res) => {
-    console.log(req);
-    // let _id = req.params._id;
-    let _id = '5c3242c500818f3848bef7fc';
-    if(!ObjectID.isValid(_id)) {
+    let id = req.params.id;
+    if(!ObjectID.isValid(id)) {
         res.status(404).send();
     }
-    Owner.findByIdAndDelete(_id).then((owner) => {
+    Owner.findByIdAndDelete(id).then((owner) => {
         if(!owner) {
             res.status(404).send();
         }
-        res.status(200).send(JSON.stringify({owner}, undefined, 2));
+        Owner.find().then((result)=> {
+            res.status(200).send(result);
+        }).catch((err)=> {
+            res.status(400).send(err);
+        });
     }).catch((e)=> res.status(400).send(e));
 });
 
